@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)",
+      "Bash(pkg-config:*)",
+      "Bash(sdl3-config:*)",
+      "Bash(sdl2-config:*)",
+      "Bash(curl:*)",
+      "Bash(cc:*)",
+      "Bash(gcc:*)",
+      "WebFetch(domain:wiki.libsdl.org)",
+      "WebFetch(domain:openrouter.ai)"
+    ]
+  }
+}

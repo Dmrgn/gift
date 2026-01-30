@@ -1,0 +1,11 @@
+# OpenRouter API key (required)
+api_key=sk-or-v1-examplekey
+
+# Model to use for transcription (required)
+model=mistralai/voxtral-small-24b-2507
+
+# Prompt sent with the audio (required)
+prompt=Transcribe this audio accurately. Return only the transcription text, do not wrap the transcription in quotes.
+
+# Audio sample rate in Hz (optional, default 44100)
+sample_rate=44100

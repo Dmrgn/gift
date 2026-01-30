@@ -1,0 +1,4 @@
+build/
+gift
+config.ini
+*.o
