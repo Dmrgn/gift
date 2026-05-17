@@ -22,8 +22,7 @@ Create `~/.config/gift/config.ini` (or `./config.ini`):
 
 ```ini
 api_key=sk-or-v1-xxxxx
-model=mistralai/voxtral-small-24b-2507
-prompt=Transcribe this audio accurately. Return only the transcription text, do not wrap the transcription in quotes.
+model=mistralai/voxtral-mini-transcribe
 sample_rate=44100
 ```
 

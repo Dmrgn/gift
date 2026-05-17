@@ -32,25 +32,9 @@ char *api_transcribe(const char *api_key, const char *model,
     cJSON *root = cJSON_CreateObject();
     cJSON_AddStringToObject(root, "model", model);
 
-    cJSON *messages = cJSON_AddArrayToObject(root, "messages");
-    cJSON *msg = cJSON_CreateObject();
-    cJSON_AddStringToObject(msg, "role", "user");
-
-    cJSON *content = cJSON_AddArrayToObject(msg, "content");
-
-    cJSON *text_part = cJSON_CreateObject();
-    cJSON_AddStringToObject(text_part, "type", "text");
-    cJSON_AddStringToObject(text_part, "text", prompt);
-    cJSON_AddItemToArray(content, text_part);
-
-    cJSON *audio_part = cJSON_CreateObject();
-    cJSON_AddStringToObject(audio_part, "type", "input_audio");
-    cJSON *input_audio = cJSON_AddObjectToObject(audio_part, "input_audio");
-    cJSON_AddStringToObject(input_audio, "data", audio_b64);
-    cJSON_AddStringToObject(input_audio, "format", "wav");
-    cJSON_AddItemToArray(content, audio_part);
-
-    cJSON_AddItemToArray(messages, msg);
+    cJSON *audio_part = cJSON_AddObjectToObject(root, "input_audio");
+    cJSON_AddStringToObject(audio_part, "data", audio_b64);
+    cJSON_AddStringToObject(audio_part, "format", "wav");
 
     char *body = cJSON_PrintUnformatted(root);
     cJSON_Delete(root);
@@ -76,7 +60,7 @@ char *api_transcribe(const char *api_key, const char *model,
 
     Buffer resp = {0};
 
-    curl_easy_setopt(curl, CURLOPT_URL, "https://openrouter.ai/api/v1/chat/completions");
+    curl_easy_setopt(curl, CURLOPT_URL, "https://openrouter.ai/api/v1/audio/transcriptions");
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, body);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_cb);
@@ -106,13 +90,10 @@ char *api_transcribe(const char *api_key, const char *model,
     }
 
     /* Extract transcription */
-    cJSON *choices = cJSON_GetObjectItem(json, "choices");
-    cJSON *first   = cJSON_GetArrayItem(choices, 0);
-    cJSON *message = first ? cJSON_GetObjectItem(first, "message") : NULL;
-    cJSON *cnt     = message ? cJSON_GetObjectItem(message, "content") : NULL;
+    cJSON *text = cJSON_GetObjectItem(json, "text");
 
-    if (cJSON_IsString(cnt)) {
-        result = strdup(cnt->valuestring);
+    if (cJSON_IsString(text)) {
+        result = strdup(text->valuestring);
     } else {
         fprintf(stderr, "Error: unexpected API response structure\n");
     }
